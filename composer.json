@@ -1,0 +1,26 @@
+{
+  "name": "tandrezone/order-orquestrator",
+  "description": "Order creation package with shipping form template and total calculation.",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": "^8.1",
+    "tandrezone/ztemp": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Tandrezone\\OrderOrquestrator\\": "src/"
+    }
+  },
+  "bin": [
+    "bin/install-order-template"
+  ],
+  "scripts": {
+    "post-install-cmd": [
+      "@php bin/install-order-template"
+    ],
+    "post-update-cmd": [
+      "@php bin/install-order-template"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+[
+  {
+    "code": "standard",
+    "label": "Standard Shipping (3-5 business days)",
+    "price": 10.0
+  },
+  {
+    "code": "express",
+    "label": "Express Shipping (1-2 business days)",
+    "price": 25.5
+  },
+  {
+    "code": "pickup",
+    "label": "In-store Pickup",
+    "price": 0.0
+  }
+]
