@@ -18,7 +18,7 @@ final class TemplateInstaller
         }
 
         if (!is_dir($targetDirectory)) {
-            mkdir($targetDirectory, 0777, true);
+            mkdir($targetDirectory, 0755, true);
         }
 
         if (!copy($source, $target)) {
