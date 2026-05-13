@@ -1,11 +1,11 @@
-# OrderOrquestrator
+# OrderOrchestrator
 
 Composer package to create orders from a list of products and prices, render an order form template using [`tandrezone/ztemp`](https://github.com/tandrezone/ztemp.git), and calculate totals including shipping.
 
 ## Installation
 
 ```bash
-composer require tandrezone/order-orquestrator
+composer require tandrezone/order-orchestrator
 ```
 
 On install/update, the package copies the order form template to:
@@ -21,7 +21,7 @@ templates/order-form.html
 
 require 'vendor/autoload.php';
 
-use Tandrezone\OrderOrquestrator\OrderOrchestrator;
+use Tandrezone\OrderOrchestrator\OrderOrchestrator;
 
 $products = [
     ['name' => 'Mouse', 'price' => 50],

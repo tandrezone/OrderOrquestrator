@@ -1,5 +1,5 @@
 {
-  "name": "tandrezone/order-orquestrator",
+  "name": "tandrezone/order-orchestrator",
   "description": "Order creation package with shipping form template and total calculation.",
   "type": "library",
   "license": "MIT",
@@ -9,7 +9,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Tandrezone\\OrderOrquestrator\\": "src/"
+      "Tandrezone\\OrderOrchestrator\\": "src/"
     }
   },
   "bin": [

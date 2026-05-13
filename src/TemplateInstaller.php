@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tandrezone\OrderOrquestrator;
+namespace Tandrezone\OrderOrchestrator;
 
 final class TemplateInstaller
 {

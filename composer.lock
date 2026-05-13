@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7edd39c363f4e3c65f6393134b64eb4",
+    "content-hash": "2a99dd4208eefef085563b68d678e726",
     "packages": [
         {
             "name": "tandrezone/ztemp",
