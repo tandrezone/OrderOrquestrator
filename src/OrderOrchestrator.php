@@ -42,7 +42,13 @@ class OrderOrchestrator
             throw new RuntimeException(sprintf('Shipping file not found: %s', $this->shippingFile));
         }
 
-        $decoded = json_decode((string) file_get_contents($this->shippingFile), true);
+        $shippingFileContent = file_get_contents($this->shippingFile);
+
+        if ($shippingFileContent === false) {
+            throw new RuntimeException(sprintf('Unable to read shipping file: %s', $this->shippingFile));
+        }
+
+        $decoded = json_decode($shippingFileContent, true);
 
         if (!is_array($decoded)) {
             throw new RuntimeException('Invalid shipping JSON format.');

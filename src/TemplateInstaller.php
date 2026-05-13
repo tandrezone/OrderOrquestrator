@@ -21,7 +21,11 @@ final class TemplateInstaller
             mkdir($targetDirectory, 0777, true);
         }
 
-        copy($source, $target);
+        if (!copy($source, $target)) {
+            fwrite(STDERR, "Unable to copy order form to: {$target}\n");
+            return;
+        }
+
         fwrite(STDOUT, "Order form copied to: {$target}\n");
     }
 }
