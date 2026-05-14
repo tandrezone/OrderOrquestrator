@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Order Form</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+    .order-card { max-width: 760px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 1rem 1.5rem; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    th, td { border-bottom: 1px solid #eee; padding: 0.6rem; text-align: left; }
+    .totals { margin-top: 1rem; font-weight: 600; }
+    .totals div { margin: 0.3rem 0; }
+    .checkout-row { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    select, input, button { padding: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div class="order-card" data-subtotal="{{ $subtotal }}">
+    <h1>Create Order</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price (USD)</th>
+        </tr>
+      </thead>
+      <tbody>
+@foreach($products)
+        <tr>
+          <td>{{ $item.name }}</td>
+          <td class="product-price" data-price="{{ $item.price_formatted }}">{{ $item.price_formatted }}</td>
+        </tr>
+@endforeach
+      </tbody>
+    </table>
+
+    <div class="checkout-row">
+      <label for="shipping">Shipping</label>
+      <select id="shipping" name="shipping">
+@foreach($shippingOptions)
+        <option value="{{ $item.code }}" data-price="{{ $item.price_formatted }}" {{ $item.selected }}>{{ $item.label }} - ${{ $item.price_formatted }}</option>
+@endforeach
+      </select>
+
+      <label for="address">Shipping address</label>
+      <input id="address" name="address" type="text" placeholder="Street, number, city" />
+
+      <button type="button">Create order</button>
+    </div>
+
+    <div class="totals">
+      <div>Products subtotal: $<span id="subtotal">{{ $subtotal }}</span></div>
+      <div>Total with shipping: $<span id="total">{{ $total }}</span></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const shippingSelect = document.getElementById('shipping');
+      const totalElement = document.getElementById('total');
+      const subtotalElement = document.getElementById('subtotal');
+      const card = document.querySelector('.order-card');
+
+      if (!shippingSelect || !totalElement || !subtotalElement || !card) {
+        return;
+      }
+
+      const subtotal = Number(card.getAttribute('data-subtotal') || '0');
+
+      function updateTotal() {
+        const selected = shippingSelect.options[shippingSelect.selectedIndex];
+        const shippingPrice = Number(selected?.getAttribute('data-price') || '0');
+        totalElement.textContent = (subtotal + shippingPrice).toFixed(2);
+      }
+
+      subtotalElement.textContent = subtotal.toFixed(2);
+      shippingSelect.addEventListener('change', updateTotal);
+      updateTotal();
+    })();
+  </script>
+</body>
+</html>

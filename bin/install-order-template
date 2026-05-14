@@ -1,0 +1,8 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require_once dirname(__DIR__) . '/src/TemplateInstaller.php';
+
+Tandrezone\OrderOrchestrator\TemplateInstaller::install(dirname(__DIR__));
