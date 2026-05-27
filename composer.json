@@ -7,15 +7,26 @@
     "php": "^8.1",
     "tandrezone/ztemp": "^1.0"
   },
+  "require-dev": {
+    "symfony/polyfill-mbstring": "^1.30",
+    "phpunit/phpunit": "^10.5"
+  },
   "autoload": {
     "psr-4": {
       "Tandrezone\\OrderOrchestrator\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tandrezone\\OrderOrchestrator\\Tests\\": "tests/"
+    }
+  },
   "bin": [
-    "bin/install-order-template"
+     "bin/install-order-template",
+     "bin/create-orders-table"
   ],
   "scripts": {
+    "test": "phpunit",
     "post-install-cmd": [
       "@php bin/install-order-template"
     ],
