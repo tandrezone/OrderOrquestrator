@@ -13,7 +13,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Tandrezone\\OrderOrchestrator\\": "src/"
+      "Tandrezone\\OrderOrchestrator\\": "src/",
+      "Tandrezone\\OrderOrchestrator\\Admin\\": "src/admin/"
     }
   },
   "autoload-dev": {

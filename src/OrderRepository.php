@@ -282,6 +282,27 @@ final class OrderRepository
         );
     }
 
+    /**
+     * Paginated list of orders filtered by lifecycle status, newest first.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function listByStatus(PDO $pdo, OrderStatus $status, int $limit = 50, int $offset = 0): array
+    {
+        $stmt = $pdo->prepare(
+            'SELECT * FROM orders WHERE status = :status ORDER BY created_at DESC LIMIT :limit OFFSET :offset'
+        );
+        $stmt->bindValue(':status', $status->value);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return array_map(
+            fn(array $row) => $this->decodeItems($row),
+            $stmt->fetchAll()
+        );
+    }
+
     // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------

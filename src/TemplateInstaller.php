@@ -8,12 +8,32 @@ final class TemplateInstaller
 {
     public static function install(string $projectRoot): void
     {
-        $source = $projectRoot . '/resources/templates/order-form.html';
-        $targetDirectory = $projectRoot . '/templates';
-        $target = $targetDirectory . '/order-form.html';
+        self::copyTemplate(
+            $projectRoot,
+            '/resources/templates/order-form.html',
+            '/templates/order-form.html',
+            'Order form'
+        );
+        self::copyTemplate(
+            $projectRoot,
+            '/resources/templates/admin/orders.html',
+            '/templates/admin/orders.html',
+            'Admin orders'
+        );
+    }
+
+    private static function copyTemplate(
+        string $projectRoot,
+        string $sourceSuffix,
+        string $targetSuffix,
+        string $label
+    ): void {
+        $source = $projectRoot . $sourceSuffix;
+        $target = $projectRoot . $targetSuffix;
+        $targetDirectory = dirname($target);
 
         if (!is_file($source)) {
-            fwrite(STDERR, "Order form template source not found: {$source}\n");
+            fwrite(STDERR, "{$label} template source not found: {$source}\n");
             return;
         }
 
@@ -22,10 +42,10 @@ final class TemplateInstaller
         }
 
         if (!copy($source, $target)) {
-            fwrite(STDERR, "Unable to copy order form to: {$target}\n");
+            fwrite(STDERR, "Unable to copy {$label} template to: {$target}\n");
             return;
         }
 
-        fwrite(STDOUT, "Order form copied to: {$target}\n");
+        fwrite(STDOUT, "{$label} template copied to: {$target}\n");
     }
 }
