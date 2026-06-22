@@ -2,14 +2,32 @@
 
 return [
     /**
-     * STARTING POINT
+     * =========================================================================
+     * PACKAGE ENTRY POINT
      * Route: /order [GET]
-     * Purpose: Displays the initial customer data and product selection form.
+     * Purpose: Displays the customer data form pre-loaded with the products to
+     *          be ordered. This is the only route the host application needs to
+     *          call to start the order flow.
+     *
+     * The host application must supply the `products` array when rendering or
+     * linking to this route so the package knows what is being ordered.
+     * =========================================================================
      */
     [
         'method'     => 'GET',
         'path'       => '/order',
-        'parameters' => [], // Initial load requires no parameters
+        'parameters' => [
+            'products' => [
+                'type'      => 'array',
+                'structure' => [
+                    'id'       => 'integer',
+                    'image'    => 'string',
+                    'name'     => 'string',
+                    'price'    => 'float',
+                    'quantity' => 'integer',
+                ],
+            ],
+        ],
     ],
 
     /**
@@ -59,6 +77,26 @@ return [
                     'quantity' => 'integer',
                 ],
             ],
+        ],
+    ],
+    /**
+     * =========================================================================
+     * PACKAGE RETURN POINT
+     * Route: defined by config('redirect_after_order')  [GET]
+     * Purpose: The host application's route to which the package redirects
+     *          after the order has been successfully saved. The host application
+     *          must define this route and set its path in config/config.php
+     *          under the key `redirect_after_order`.
+     *
+     * The package appends the following query parameter to the redirect URL so
+     * the host application can confirm the completed order.
+     * =========================================================================
+     */
+    [
+        'method'     => 'GET',
+        'path'       => 'config[redirect_after_order]', // e.g. /thank-you — set in config/config.php
+        'parameters' => [
+            'total_price' => 'float', // Total price of the confirmed order
         ],
     ],
 ];

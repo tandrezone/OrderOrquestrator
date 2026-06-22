@@ -61,7 +61,11 @@ class ConfirmationController
     {
         $this->saveOrder($pdo, $postData);
 
-        header('Location: ' . $this->redirectUrl);
+        $totalPrice  = round((float) ($postData['total_price'] ?? 0), 2);
+        $separator   = str_contains($this->redirectUrl, '?') ? '&' : '?';
+        $redirectUrl = $this->redirectUrl . $separator . 'total_price=' . urlencode((string) $totalPrice);
+
+        header('Location: ' . $redirectUrl);
         exit;
     }
 
