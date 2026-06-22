@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Confirm Order</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; margin: 2rem; background: #f9f9f9; }
+    .order-card { max-width: 800px; margin: 0 auto; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem 2rem; }
+    h1 { margin-top: 0; }
+    h2 { font-size: 1.1rem; margin-top: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.4rem; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    th, td { border-bottom: 1px solid #eee; padding: 0.6rem 0.5rem; text-align: left; }
+    th { background: #f4f4f4; }
+    .product-img { width: 56px; height: 56px; object-fit: cover; border-radius: 4px; }
+    .summary-grid { display: grid; grid-template-columns: 160px 1fr; row-gap: 0.4rem; margin-bottom: 1rem; }
+    .summary-label { font-weight: 600; color: #555; }
+    .total-row { font-weight: 700; font-size: 1.05rem; }
+    .actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .btn-confirm { padding: 0.65rem 2rem; background: #28a745; color: #fff; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+    .btn-confirm:hover { background: #1e7e34; }
+    .btn-back { padding: 0.65rem 1.5rem; background: #6c757d; color: #fff; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; }
+    .btn-back:hover { background: #545b62; }
+  </style>
+</head>
+<body>
+  <div class="order-card">
+    <h1>Order Confirmation</h1>
+    <p>Please review your order details before confirming.</p>
+
+    <h2>Customer Details</h2>
+    <div class="summary-grid">
+      <span class="summary-label">Name</span>
+      <span>{{ $customer_name }}</span>
+      <span class="summary-label">Email</span>
+      <span>{{ $customer_email }}</span>
+      <span class="summary-label">Shipping Address</span>
+      <span>{{ $shipping_address }}</span>
+    </div>
+
+    <h2>Products &amp; Shipping</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Qty</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+@foreach($products)
+        <tr>
+          <td><img class="product-img" src="{{ $item.image }}" alt="{{ $item.name }}"></td>
+          <td>{{ $item.name }}</td>
+          <td>${{ $item.price_formatted }}</td>
+          <td>{{ $item.quantity }}</td>
+          <td>${{ $item.line_total_formatted }}</td>
+        </tr>
+@endforeach
+      </tbody>
+      <tfoot>
+        <tr class="total-row">
+          <td colspan="4" style="text-align:right;">Total Price</td>
+          <td>${{ $total_price }}</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <form method="POST" action="/confirmation">
+      <input type="hidden" name="customer_name"    value="{{ $customer_name }}">
+      <input type="hidden" name="customer_email"   value="{{ $customer_email }}">
+      <input type="hidden" name="shipping_address" value="{{ $shipping_address }}">
+      <input type="hidden" name="total_price"      value="{{ $total_price_raw }}">
+      <input type="hidden" name="products"         value="{{ $products_json }}">
+
+      <div class="actions">
+        <a href="/order" class="btn-back">← Back</a>
+        <button type="submit" class="btn-confirm">Confirm Order</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

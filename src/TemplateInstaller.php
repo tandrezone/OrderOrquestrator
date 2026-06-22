@@ -8,24 +8,34 @@ final class TemplateInstaller
 {
     public static function install(string $projectRoot): void
     {
-        $source = $projectRoot . '/resources/templates/order-form.html';
-        $targetDirectory = $projectRoot . '/templates';
-        $target = $targetDirectory . '/order-form.html';
+        $sourceDir = $projectRoot . '/resources/templates';
+        $targetDir = $projectRoot . '/templates';
 
-        if (!is_file($source)) {
-            fwrite(STDERR, "Order form template source not found: {$source}\n");
-            return;
+        $templates = [
+            'order-form.html',
+            'order.html',
+            'confirmation.html',
+        ];
+
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0755, true);
         }
 
-        if (!is_dir($targetDirectory)) {
-            mkdir($targetDirectory, 0755, true);
-        }
+        foreach ($templates as $template) {
+            $source = $sourceDir . '/' . $template;
+            $target = $targetDir . '/' . $template;
 
-        if (!copy($source, $target)) {
-            fwrite(STDERR, "Unable to copy order form to: {$target}\n");
-            return;
-        }
+            if (!is_file($source)) {
+                fwrite(STDERR, "Template source not found: {$source}\n");
+                continue;
+            }
 
-        fwrite(STDOUT, "Order form copied to: {$target}\n");
+            if (!copy($source, $target)) {
+                fwrite(STDERR, "Unable to copy template to: {$target}\n");
+                continue;
+            }
+
+            fwrite(STDOUT, "Template copied to: {$target}\n");
+        }
     }
 }
