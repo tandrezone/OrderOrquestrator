@@ -32,6 +32,21 @@ $orchestrator->createOrdersTable($pdo);
 
 ## Usage
 
+### Inspect package structure
+
+```php
+use Tandrezone\OrderOrchestrator\OrderOrquestrator;
+
+$package = new OrderOrquestrator();
+
+$metadata = $package->describe();
+$entryPoint = $package->entryPointRoute();      // GET /order
+$requiredData = $package->requiredEntryPointData();
+$ordersSchema = $package->ordersTableSchema();
+```
+
+`OrderOrquestrator` is a root-level manifest for the package. It tells you where the templates, routes, migrations, config, scripts, and resources live, which route starts the flow, which input data the entry route requires, and the current `orders` table schema source.
+
 ### Render the order form
 
 ```php

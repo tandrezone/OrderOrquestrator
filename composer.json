@@ -15,7 +15,10 @@
     "psr-4": {
       "Tandrezone\\OrderOrchestrator\\": "src/",
       "Tandrezone\\OrderOrchestrator\\Admin\\": "src/admin/"
-    }
+    },
+    "classmap": [
+      "OrderOrquestrator.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
