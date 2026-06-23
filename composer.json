@@ -22,7 +22,17 @@
       "Tandrezone\\OrderOrchestrator\\Tests\\": "tests/"
     }
   },
+  "bin": [
+    "bin/install-order-template",
+    "bin/create-orders-table"
+  ],
   "scripts": {
-    "test": "phpunit"
+    "test": "phpunit",
+    "post-install-cmd": [
+      "@php bin/install-order-template"
+    ],
+    "post-update-cmd": [
+      "@php bin/install-order-template"
+    ]
   }
 }
