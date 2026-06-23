@@ -1,9 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Confirm Order</title>
+@include(partials/head.html)
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     body { font-family: Arial, sans-serif; margin: 2rem; background: #f9f9f9; }
@@ -25,51 +22,58 @@
   </style>
 </head>
 <body>
+@include(partials/site-header.html)
+<main>
   <div class="order-card">
     <h1>Order Confirmation</h1>
     <p>Please review your order details before confirming.</p>
 
-    <h2>Customer Details</h2>
-    <div class="summary-grid">
-      <span class="summary-label">Name</span>
-      <span>{{ $customer_name }}</span>
-      <span class="summary-label">Email</span>
-      <span>{{ $customer_email }}</span>
-      <span class="summary-label">Shipping Address</span>
-      <span>{{ $shipping_address }}</span>
-    </div>
+    <section aria-labelledby="customer-heading">
+      <h2 id="customer-heading">Customer Details</h2>
+      <div class="summary-grid">
+        <span class="summary-label">Name</span>
+        <span>{{ $customer_name }}</span>
+        <span class="summary-label">Email</span>
+        <span>{{ $customer_email }}</span>
+        <span class="summary-label">Shipping Address</span>
+        <span>{{ $shipping_address }}</span>
+      </div>
+    </section>
 
-    <h2>Products &amp; Shipping</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Image</th>
-          <th>Name</th>
-          <th>Price</th>
-          <th>Qty</th>
-          <th>Subtotal</th>
-        </tr>
-      </thead>
-      <tbody>
-@foreach($products)
-        <tr>
-          <td><img class="product-img" src="{{ $item.image }}" alt="{{ $item.name }}"></td>
-          <td>{{ $item.name }}</td>
-          <td>${{ $item.price_formatted }}</td>
-          <td>{{ $item.quantity }}</td>
-          <td>${{ $item.line_total_formatted }}</td>
-        </tr>
+    <section aria-labelledby="products-heading">
+      <h2 id="products-heading">Products &amp; Shipping</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+@foreach($products as $item)
+          <tr>
+            <td><img class="product-img" src="{{ $item.image }}" alt="{{ $item.name }}"></td>
+            <td>{{ $item.name }}</td>
+            <td>${{ $item.price_formatted }}</td>
+            <td>{{ $item.quantity }}</td>
+            <td>${{ $item.line_total_formatted }}</td>
+          </tr>
 @endforeach
-      </tbody>
-      <tfoot>
-        <tr class="total-row">
-          <td colspan="4" style="text-align:right;">Total Price</td>
-          <td>${{ $total_price }}</td>
-        </tr>
-      </tfoot>
-    </table>
+        </tbody>
+        <tfoot>
+          <tr class="total-row">
+            <td colspan="4" style="text-align:right;">Total Price</td>
+            <td>${{ $total_price }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </section>
 
     <form method="POST" action="/confirmation">
+      <input type="hidden" name="_token"           value="{{ $csrf_token }}">
       <input type="hidden" name="customer_name"    value="{{ $customer_name }}">
       <input type="hidden" name="customer_email"   value="{{ $customer_email }}">
       <input type="hidden" name="shipping_address" value="{{ $shipping_address }}">
@@ -82,5 +86,8 @@
       </div>
     </form>
   </div>
+</main>
+@include(cart-officer/cart-sidebar.html)
+@include(partials/site-footer.html)
 </body>
 </html>
