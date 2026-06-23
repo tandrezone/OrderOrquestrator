@@ -16,6 +16,18 @@ final class TemplateInstaller
         );
         self::copyTemplate(
             $projectRoot,
+            '/resources/templates/order.html',
+            '/templates/order.html',
+            'Order'
+        );
+        self::copyTemplate(
+            $projectRoot,
+            '/resources/templates/confirmation.html',
+            '/templates/confirmation.html',
+            'Confirmation'
+        );
+        self::copyTemplate(
+            $projectRoot,
             '/resources/templates/admin/orders.html',
             '/templates/admin/orders.html',
             'Admin orders'
@@ -36,11 +48,6 @@ final class TemplateInstaller
             fwrite(STDERR, "{$label} template source not found: {$source}\n");
             return;
         }
-
-        if (!is_dir($targetDirectory)) {
-            mkdir($targetDirectory, 0755, true);
-        }
-
         if (!copy($source, $target)) {
             fwrite(STDERR, "Unable to copy {$label} template to: {$target}\n");
             return;
