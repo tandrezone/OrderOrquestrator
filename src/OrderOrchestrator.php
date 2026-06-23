@@ -171,6 +171,12 @@ class OrderOrchestrator
         return $this->repository->list($pdo, $limit, $offset);
     }
 
+    /** @return array<int, array<string, mixed>> */
+    public function listOrdersByStatus(PDO $pdo, OrderStatus $status, int $limit = 50, int $offset = 0): array
+    {
+        return $this->repository->listByStatus($pdo, $status, $limit, $offset);
+    }
+
     // -------------------------------------------------------------------------
     // Schema setup
     // -------------------------------------------------------------------------

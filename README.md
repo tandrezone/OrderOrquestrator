@@ -48,6 +48,26 @@ echo $orchestrator->renderOrderForm($products, 'standard');
 $total = $orchestrator->calculateTotal($products, 'express');
 ```
 
+### Administration routes and logic
+
+Use the admin helpers under `src/admin` to expose an orders administration page:
+
+```php
+use Tandrezone\OrderOrchestrator\Admin\AdminOrderLogic;
+use Tandrezone\OrderOrchestrator\Admin\AdminRoutes;
+
+$adminLogic = new AdminOrderLogic();
+$routes = AdminRoutes::definitions(); // GET /admin/orders, POST /admin/orders/{orderId}/status
+
+// Example list endpoint (status query is optional)
+echo $adminLogic->handleList($pdo, ['status' => 'processing']);
+
+// Example update endpoint body: ['status' => 'shipped']
+$adminLogic->handleStatusUpdate($pdo, $orderId, $_POST);
+```
+
+The package now also ships `resources/templates/admin/orders.html`, copied to `templates/admin/orders.html` on install/update.
+
 ### Save an order from checkout
 
 ```php
