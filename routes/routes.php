@@ -1,5 +1,8 @@
 <?php
 
+use Tandrezone\OrderOrchestrator\Controllers\ConfirmationController;
+use Tandrezone\OrderOrchestrator\Controllers\OrderController;
+
 return [
     /**
      * =========================================================================
@@ -16,6 +19,7 @@ return [
     [
         'method'     => 'GET',
         'path'       => '/order',
+        'callback'   => [OrderController::class, 'showForm'],
         'parameters' => [
             'products' => [
                 'type'      => 'array',
@@ -38,6 +42,7 @@ return [
     [
         'method'     => 'POST',
         'path'       => '/order',
+        'callback'   => [OrderController::class, 'processForm'],
         'parameters' => [
             'customer_name'    => 'string',
             'customer_email'   => 'string',
@@ -63,6 +68,7 @@ return [
     [
         'method'     => 'POST',
         'path'       => '/confirmation',
+        'callback'   => [ConfirmationController::class, 'processConfirmation'],
         'parameters' => [
             'customer_name'    => 'string',
             'customer_email'   => 'string',
