@@ -1,9 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Order Form</title>
+@include(partials/head.html)
   <style>
     body { font-family: Arial, sans-serif; margin: 2rem; }
     .order-card { max-width: 760px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 1rem 1.5rem; }
@@ -16,69 +13,80 @@
   </style>
 </head>
 <body>
+@include(partials/site-header.html)
+<main>
   <div class="order-card" data-subtotal="{{ $subtotal }}">
     <h1>Create Order</h1>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Product</th>
-          <th>Price (USD)</th>
-        </tr>
-      </thead>
-      <tbody>
-@foreach($products)
-        <tr>
-          <td>{{ $item.name }}</td>
-          <td class="product-price" data-price="{{ $item.price_formatted }}">{{ $item.price_formatted }}</td>
-        </tr>
+    <section aria-labelledby="products-heading">
+      <h2 id="products-heading">Products</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price (USD)</th>
+          </tr>
+        </thead>
+        <tbody>
+@foreach($products as $item)
+          <tr>
+            <td>{{ $item.name }}</td>
+            <td class="product-price" data-price="{{ $item.price_formatted }}">{{ $item.price_formatted }}</td>
+          </tr>
 @endforeach
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </section>
 
-    <div class="checkout-row">
-      <label for="shipping">Shipping</label>
-      <select id="shipping" name="shipping">
-@foreach($shippingOptions)
-        <option value="{{ $item.code }}" data-price="{{ $item.price_formatted }}" {{ $item.selected }}>{{ $item.label }} - ${{ $item.price_formatted }}</option>
+    <section aria-labelledby="checkout-heading">
+      <h2 id="checkout-heading">Checkout</h2>
+      <div class="checkout-row">
+        <label for="shipping">Shipping</label>
+        <select id="shipping" name="shipping">
+@foreach($shippingOptions as $item)
+          <option value="{{ $item.code }}" data-price="{{ $item.price_formatted }}" {{ $item.selected }}>{{ $item.label }} - ${{ $item.price_formatted }}</option>
 @endforeach
-      </select>
+        </select>
 
-      <label for="address">Shipping address</label>
-      <input id="address" name="address" type="text" placeholder="Street, number, city" />
+        <label for="address">Shipping address</label>
+        <input id="address" name="address" type="text" placeholder="Street, number, city" />
 
-      <button type="button">Create order</button>
-    </div>
+        <button type="button">Create order</button>
+      </div>
+    </section>
 
     <div class="totals">
-      <div>Products subtotal: $<span id="subtotal">{{ $subtotal }}</span></div>
-      <div>Total with shipping: $<span id="total">{{ $total }}</span></div>
+      <div>Products subtotal: <span id="subtotal">{{ $subtotal }}</span></div>
+      <div>Total with shipping: <span id="total">{{ $total }}</span></div>
     </div>
   </div>
+</main>
+@include(cart-officer/cart-sidebar.html)
+@include(partials/site-footer.html)
+<script>
+  (function () {
+    var fmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+    var shippingSelect = document.getElementById('shipping');
+    var totalElement = document.getElementById('total');
+    var subtotalElement = document.getElementById('subtotal');
+    var card = document.querySelector('.order-card');
 
-  <script>
-    (function () {
-      const shippingSelect = document.getElementById('shipping');
-      const totalElement = document.getElementById('total');
-      const subtotalElement = document.getElementById('subtotal');
-      const card = document.querySelector('.order-card');
+    if (!shippingSelect || !totalElement || !subtotalElement || !card) {
+      return;
+    }
 
-      if (!shippingSelect || !totalElement || !subtotalElement || !card) {
-        return;
-      }
+    var subtotal = Number(card.getAttribute('data-subtotal') || '0');
 
-      const subtotal = Number(card.getAttribute('data-subtotal') || '0');
+    function updateTotal() {
+      var selected = shippingSelect.options[shippingSelect.selectedIndex];
+      var shippingPrice = Number(selected ? selected.getAttribute('data-price') : '0') || 0;
+      totalElement.textContent = fmt.format(subtotal + shippingPrice);
+    }
 
-      function updateTotal() {
-        const selected = shippingSelect.options[shippingSelect.selectedIndex];
-        const shippingPrice = Number(selected?.getAttribute('data-price') || '0');
-        totalElement.textContent = (subtotal + shippingPrice).toFixed(2);
-      }
-
-      subtotalElement.textContent = subtotal.toFixed(2);
-      shippingSelect.addEventListener('change', updateTotal);
-      updateTotal();
-    })();
-  </script>
+    subtotalElement.textContent = fmt.format(subtotal);
+    shippingSelect.addEventListener('change', updateTotal);
+    updateTotal();
+  })();
+</script>
 </body>
 </html>
