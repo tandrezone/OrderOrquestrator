@@ -5,7 +5,7 @@
   "license": "MIT",
   "require": {
     "php": "^8.1",
-    "tandrezone/ztemp": "^1.0"
+    "tandrezone/ztemp": "^1.1"
   },
   "require-dev": {
     "symfony/polyfill-mbstring": "^1.30",
