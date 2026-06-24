@@ -53,9 +53,10 @@ final class OrderOrquestratorManifestTest extends TestCase
         $schema = $this->package->ordersTableSchema();
 
         self::assertSame('orders', $schema['table']);
-        self::assertSame(dirname(__DIR__) . '/src/OrderRepository.php', $schema['source']);
-        self::assertSame('VARCHAR(100)', $schema['columns']['first_name']['type']);
-        self::assertSame("ENUM('pending','paid','processing','shipped','delivered','cancelled','refunded')", $schema['columns']['status']['type']);
+        self::assertSame(dirname(__DIR__) . '/migrations/CreateOrdersTable.php', $schema['source']);
+        self::assertSame('VARCHAR(255)', $schema['columns']['customer_name']['type']);
+        self::assertSame('VARCHAR(255)', $schema['columns']['customer_email']['type']);
+        self::assertSame('DECIMAL(12,2)', $schema['columns']['total_price']['type']);
         self::assertSame('CURRENT_TIMESTAMP', $schema['columns']['created_at']['default']);
         self::assertTrue($schema['columns']['id']['primary_key']);
     }

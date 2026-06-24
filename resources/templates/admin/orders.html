@@ -1,68 +1,71 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Order Administration</title>
+@include(administration/partials/head.html)
   <style>
     body { font-family: Arial, sans-serif; margin: 2rem; }
-    .orders-card { max-width: 1100px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 1rem 1.5rem; }
     .filter-row { display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border-bottom: 1px solid #eee; padding: 0.6rem; text-align: left; vertical-align: middle; }
+    .admin-table { width: 100%; border-collapse: collapse; }
+    .admin-table th, .admin-table td { border-bottom: 1px solid #eee; padding: 0.6rem; text-align: left; vertical-align: middle; }
     select, button { padding: 0.4rem 0.5rem; }
-    .message { margin-bottom: 1rem; color: #0f5132; background: #d1e7dd; border: 1px solid #badbcc; border-radius: 6px; padding: 0.6rem; }
   </style>
 </head>
 <body>
-  <div class="orders-card">
+@include(administration/partials/header.html)
+<main>
+  @include(administration/partials/flash.html)
+
+  <div class="admin-page-header">
     <h1>Orders Administration</h1>
+  </div>
 
-    <div class="message">{{ $message }}</div>
-
+  <div class="admin-panel">
     <form method="get" action="{{ $orders_path }}" class="filter-row">
       <label for="status">Filter by status</label>
       <select id="status" name="status">
-@foreach($filter_options)
+@foreach($filter_options as $item)
         <option value="{{ $item.value }}" {{ $item.selected }}>{{ $item.label }}</option>
 @endforeach
       </select>
       <button type="submit">Apply filter</button>
     </form>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Order</th>
-          <th>Customer</th>
-          <th>Email</th>
-          <th>Total (USD)</th>
-          <th>Status</th>
-          <th>Change status</th>
-        </tr>
-      </thead>
-      <tbody>
-@foreach($orders)
-        <tr>
-          <td>{{ $item.order_number }}</td>
-          <td>{{ $item.customer_name }}</td>
-          <td>{{ $item.email }}</td>
-          <td>${{ $item.total_formatted }}</td>
-          <td>{{ $item.status_label }}</td>
-          <td>
-            <form method="post" action="{{ $item.update_status_path }}">
-              <select name="status">
-@foreach($item.status_options)
-                <option value="{{ $item.value }}" {{ $item.selected }}>{{ $item.label }}</option>
+    <div class="table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Customer</th>
+            <th>Email</th>
+            <th>Total (USD)</th>
+            <th>Status</th>
+            <th>Change status</th>
+          </tr>
+        </thead>
+        <tbody>
+@foreach($orders as $item)
+          <tr>
+            <td>{{ $item.order_number }}</td>
+            <td>{{ $item.customer_name }}</td>
+            <td>{{ $item.email }}</td>
+            <td>${{ $item.total_formatted }}</td>
+            <td>{{ $item.status_label }}</td>
+            <td>
+              <form method="post" action="{{ $item.update_status_path }}">
+                <input type="hidden" name="_token" value="{{ $csrf_token }}">
+                <select name="status">
+@foreach($item.status_options as $opt)
+                  <option value="{{ $opt.value }}" {{ $opt.selected }}>{{ $opt.label }}</option>
 @endforeach
-              </select>
-              <button type="submit">Update</button>
-            </form>
-          </td>
-        </tr>
+                </select>
+                <button type="submit">Update</button>
+              </form>
+            </td>
+          </tr>
 @endforeach
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
+</main>
 </body>
 </html>

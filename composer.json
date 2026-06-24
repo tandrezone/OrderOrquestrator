@@ -26,8 +26,8 @@
     }
   },
   "bin": [
-     "bin/install-order-template",
-     "bin/create-orders-table"
+    "bin/install-order-template",
+    "bin/create-orders-table"
   ],
   "scripts": {
     "test": "phpunit",

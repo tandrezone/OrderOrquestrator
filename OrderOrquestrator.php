@@ -15,40 +15,13 @@ final class OrderOrquestrator
             'primary_key' => true,
             'default' => null,
         ],
-        'order_number' => [
-            'type' => 'VARCHAR(50)',
-            'nullable' => false,
-            'unique' => true,
-            'default' => null,
-        ],
-        'first_name' => ['type' => 'VARCHAR(100)', 'nullable' => false, 'default' => null],
-        'last_name' => ['type' => 'VARCHAR(100)', 'nullable' => false, 'default' => null],
-        'email' => ['type' => 'VARCHAR(255)', 'nullable' => false, 'default' => null],
-        'address' => ['type' => 'VARCHAR(500)', 'nullable' => false, 'default' => null],
-        'zip' => ['type' => 'VARCHAR(20)', 'nullable' => false, 'default' => null],
-        'city' => ['type' => 'VARCHAR(100)', 'nullable' => false, 'default' => null],
-        'phone' => ['type' => 'VARCHAR(30)', 'nullable' => true, 'default' => null],
-        'shipping_method' => ['type' => 'VARCHAR(50)', 'nullable' => false, 'default' => null],
-        'shipping_price' => ['type' => 'DECIMAL(12,2)', 'nullable' => false, 'default' => '0.00'],
-        'payment_gateway' => ['type' => 'VARCHAR(50)', 'nullable' => false, 'default' => null],
-        'subtotal' => ['type' => 'DECIMAL(12,2)', 'nullable' => false, 'default' => null],
-        'total' => ['type' => 'DECIMAL(12,2)', 'nullable' => false, 'default' => null],
-        'items' => ['type' => 'JSON', 'nullable' => false, 'default' => null],
-        'status' => [
-            'type' => "ENUM('pending','paid','processing','shipped','delivered','cancelled','refunded')",
-            'nullable' => false,
-            'default' => 'pending',
-        ],
-        'tracking_carrier' => ['type' => 'VARCHAR(100)', 'nullable' => true, 'default' => null],
-        'tracking_number' => ['type' => 'VARCHAR(255)', 'nullable' => true, 'default' => null],
-        'tracking_url' => ['type' => 'VARCHAR(500)', 'nullable' => true, 'default' => null],
-        'tracking_status' => ['type' => 'VARCHAR(50)', 'nullable' => true, 'default' => null],
-        'tracking_last_checked' => ['type' => 'TIMESTAMP', 'nullable' => true, 'default' => null],
-        'notes' => ['type' => 'TEXT', 'nullable' => true, 'default' => null],
+        'customer_name' => ['type' => 'VARCHAR(255)', 'nullable' => false, 'default' => null],
+        'customer_email' => ['type' => 'VARCHAR(255)', 'nullable' => false, 'default' => null],
+        'shipping_address' => ['type' => 'VARCHAR(500)', 'nullable' => false, 'default' => null],
+        'total_price' => ['type' => 'DECIMAL(12,2)', 'nullable' => false, 'default' => null],
+        'products' => ['type' => 'JSON', 'nullable' => false, 'default' => null],
         'created_at' => ['type' => 'TIMESTAMP', 'nullable' => false, 'default' => 'CURRENT_TIMESTAMP'],
         'updated_at' => ['type' => 'TIMESTAMP', 'nullable' => false, 'default' => 'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'],
-        'shipped_at' => ['type' => 'TIMESTAMP', 'nullable' => true, 'default' => null],
-        'delivered_at' => ['type' => 'TIMESTAMP', 'nullable' => true, 'default' => null],
     ];
 
     public function __construct(
@@ -101,9 +74,19 @@ final class OrderOrquestrator
      */
     public function routeDefinitions(): array
     {
-        /** @var array<int, array<string, mixed>> $routes */
-        $routes = require $this->routesFile();
+        $file = $this->routesFile();
 
+        if (!is_file($file)) {
+            throw new \RuntimeException("Routes file not found: {$file}");
+        }
+
+        $routes = require $file;
+
+        if (!is_array($routes)) {
+            throw new \RuntimeException("Routes file did not return an array: {$file}");
+        }
+
+        /** @var array<int, array<string, mixed>> $routes */
         return $routes;
     }
 
@@ -112,7 +95,13 @@ final class OrderOrquestrator
      */
     public function entryPointRoute(): array
     {
-        return $this->routeDefinitions()[0] ?? [];
+        foreach ($this->routeDefinitions() as $route) {
+            if (($route['method'] ?? '') === 'GET' && ($route['path'] ?? '') === '/order') {
+                return $route;
+            }
+        }
+
+        return [];
     }
 
     /**
@@ -134,7 +123,7 @@ final class OrderOrquestrator
     {
         return [
             'table' => 'orders',
-            'source' => $this->projectRoot . '/src/OrderRepository.php',
+            'source' => $this->projectRoot . '/migrations/CreateOrdersTable.php',
             'columns' => self::ORDERS_TABLE_COLUMNS,
         ];
     }

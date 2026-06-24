@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Tandrezone\OrderOrchestrator\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Tandrezone\OrderOrchestrator\Controllers\ConfirmationController;
+use Tandrezone\OrderOrchestrator\Controllers\OrderController;
 
 /**
- * Verifies the shape, methods, paths, and parameter specs of routes/routes.php.
+ * Verifies the shape, methods, paths, parameter specs, and callbacks of routes/routes.php.
  *
  * The file must expose exactly four definitions:
  *   [0] GET  /order              — package entry point (requires products input)
@@ -46,6 +48,25 @@ final class RoutesTest extends TestCase
             self::assertArrayHasKey('path',       $route, "Route #{$index} missing 'path'");
             self::assertArrayHasKey('parameters', $route, "Route #{$index} missing 'parameters'");
         }
+    }
+
+    // -------------------------------------------------------------------------
+    // Callbacks
+    // -------------------------------------------------------------------------
+
+    public function testGetOrderRouteCallback(): void
+    {
+        self::assertSame([OrderController::class, 'showForm'], $this->routes[0]['callback']);
+    }
+
+    public function testPostOrderRouteCallback(): void
+    {
+        self::assertSame([OrderController::class, 'processForm'], $this->routes[1]['callback']);
+    }
+
+    public function testPostConfirmationRouteCallback(): void
+    {
+        self::assertSame([ConfirmationController::class, 'processConfirmation'], $this->routes[2]['callback']);
     }
 
     public function testEveryRouteParametersValueIsAnArray(): void
